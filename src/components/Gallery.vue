@@ -148,7 +148,7 @@ watch(selectedImage, () => {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: rgb(20, 20, 20);
+    background-color: var(--secondary-color);
     border: none;
     display: flex;
     align-items: center;

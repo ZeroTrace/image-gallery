@@ -17,6 +17,8 @@
     padding: 1rem;
     border-radius: 1rem;
     margin: 0 auto;
+    background-color: var(--primary-color);
+    color: white;
 }
 
 .card__title {
