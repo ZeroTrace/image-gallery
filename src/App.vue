@@ -1,8 +1,8 @@
 <script setup>
 import axios from "axios";
 import { nextTick, onBeforeUnmount, onMounted, ref, shallowRef, watch } from "vue";
+import ModalDialog from "./components/modalDialog.vue";
 
-const modalDialog = ref(null);
 const galleryScrollableContainer = ref(null);
 
 const images = ref([]);
@@ -10,16 +10,6 @@ const selectedImage = shallowRef();
 const canScrollLeft = ref(false);
 const canScrollRight = ref(true);
 const preventScrolling = ref(false);
-
-async function openModal (image) {
-    selectedImage.value = image;
-
-    await nextTick();
-
-    modalDialog.value.showModal();
-    preventScrolling.value = true;
-
-}
 
 function scrollGallery (direction) {
     if (preventScrolling.value) return;
@@ -30,18 +20,28 @@ function scrollGallery (direction) {
     })
 }
 
+function openModal (image) {
+    preventScrolling.value = true;
+    selectedImage.value = image;
+}
+
 function handleKeyDown (e) {
     const keyboardInteractionMap = {
         'Escape': () => {
-            modalDialog.value.close()
-            // selectedImage.value = null;
+            selectedImage.value = null;
             preventScrolling.value = false;
         },
-        'ArrowLeft': () => scrollGallery('left'),
-        'ArrowRight': () => scrollGallery('right'),
+        'ArrowLeft': (event) => {
+            event.preventDefault();
+            scrollGallery('left')
+        },
+        'ArrowRight': (event) => {
+            event.preventDefault();
+            scrollGallery('right')
+        },
     }
 
-    Object.keys(keyboardInteractionMap).includes(e.key) && keyboardInteractionMap[e.key]();
+    Object.keys(keyboardInteractionMap).includes(e.key) && keyboardInteractionMap[e.key](event);
 }
 
 function handleScroll () {
@@ -85,15 +85,7 @@ watch(images, async () => {
 </script>
 
 <template>
-  <Teleport to="body">
-    <dialog v-if="selectedImage" ref="modalDialog" class="modal-dialog__container">
-      <h2 class="modal-dialog__title">Image title</h2>
-      <div class="modal-dialog__image-wrapper">
-        <img :alt="`${selectedImage.author}`" :src="selectedImage.download_url" class="modal-dialog__image">
-      </div>
-      <small class="modal-dialog__author">Author: {{ selectedImage.author }}</small>
-    </dialog>
-  </Teleport>
+  <ModalDialog :image="selectedImage" />
   <main>
     <h1 class="main-title">Image gallery</h1>
     <div class="card">
@@ -145,54 +137,6 @@ main {
 
 .main-title {
     text-align: center;
-}
-
-.modal-dialog__container {
-    width: 100dvw;
-    height: 100dvh;
-    max-width: max-content;
-    max-height: 768px;
-
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    overflow: hidden;
-    border: none;
-    border-radius: 10px;
-
-    padding: 64px 8px 36px 8px;
-}
-
-.modal-dialog__container::backdrop {
-    background: rgba(0, 0, 0, 0.80);
-}
-
-.modal-dialog__image-wrapper {
-    width: 100%;
-    height: 100%;
-}
-
-.modal-dialog__image {
-    width: 100%;
-    height: 100%;
-    object-fit: scale-down;
-}
-
-.modal-dialog__title {
-    position: absolute;
-    z-index: 1;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    user-select: none;
-}
-
-.modal-dialog__author {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    user-select: none;
 }
 
 .gallery {
