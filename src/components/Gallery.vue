@@ -1,6 +1,5 @@
 <script setup>
-import { inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import axios from "axios";
+import { inject, nextTick, ref, watch } from "vue";
 import { useEventListener } from "../composables/event.js";
 import { useLazyLoadImages } from "../composables/lazy-loader.js";
 
@@ -77,10 +76,11 @@ watch(selectedImage, () => {
     <button :disabled="!canScrollLeft" class="gallery-button gallery-button--left" @click="scrollGallery('left')">
       <span class="material-symbols-outlined">keyboard_arrow_left</span>
     </button>
-    <div ref="galleryScrollableContainer"
-         class="gallery__container"
-         @scroll="handleScroll"
-         @scrollend="handleScrollEnd"
+    <div
+      ref="galleryScrollableContainer"
+      class="gallery__container"
+      @scroll="handleScroll"
+      @scrollend="handleScrollEnd"
     >
       <div
         v-for="image in images"
@@ -108,6 +108,7 @@ watch(selectedImage, () => {
 <style scoped>
 .gallery {
     display: flex;
+    flex: 1;
     align-items: center;
     gap: 1rem;
 }
@@ -161,5 +162,23 @@ watch(selectedImage, () => {
 .gallery-button[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+@media(max-width: 1800px) {
+    .gallery__image-wrapper {
+        width: 30%;
+    }
+}
+
+@media(max-width: 1200px) {
+    .gallery__image-wrapper {
+        width: 50%;
+    }
+}
+
+@media(max-width: 600px) {
+    .gallery__image-wrapper {
+        width: 100%;
+    }
 }
 </style>
