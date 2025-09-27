@@ -2,7 +2,7 @@
   <div class="card">
     <h2 class="card__title">Project description: </h2>
     <p class="card__description">
-      This is a simple image gallery. The images are lazy loaded to improve performance.
+      This is an image gallery test project. The images are lazy loaded to improve performance.
       You can scroll through images using the arrow keys, clicking an image,
       pressing "Enter" or "Space" while an image is selected opens a
       modal dialog, you can close the modal dialog by pressing "Escape".
