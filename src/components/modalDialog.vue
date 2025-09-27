@@ -1,16 +1,21 @@
 <script setup>
-import { nextTick, ref, watch } from "vue";
-
-const props = defineProps({
-    image: {
-        type: Object,
-        default: () => ({})
-    }
-})
+import { inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useEventListener } from "../composables/event.js";
 
 const modalDialog = ref(null);
+const image = inject('selectedImage')
 
-watch(() => props.image, async () => {
+function handleKeyDown (e) {
+    if (!modalDialog.value) return;
+    if (e.key !== 'Escape') return;
+
+    modalDialog.value.close();
+    image.value = null;
+}
+
+useEventListener(window, 'keydown', handleKeyDown)
+
+watch(image, async () => {
     await nextTick();
     modalDialog.value && modalDialog.value.showModal();
 })
