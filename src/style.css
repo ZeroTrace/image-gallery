@@ -23,3 +23,7 @@ body {
     font-variation-settings:
             "wdth" 100;
 }
+
+p {
+    max-width: 75ch;
+}
